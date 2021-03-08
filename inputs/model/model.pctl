@@ -1,0 +1,5 @@
+//Objective, min
+R{"time"}min=?[ F task6=3 ]
+
+//Objective, min
+R{"energy"}min=?[ F task6=3 ]

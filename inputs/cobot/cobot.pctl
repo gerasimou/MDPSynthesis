@@ -1,0 +1,19 @@
+// Constraint, min, 0.1
+// P=? [ G ("ANYREC"&!"ACCIDENT" => (!"ACCIDENT" W "SAFE")) ]
+
+// Objective, max
+// P=? [ F (wpfin & wps=empty & !reffocc & mntDone) ]
+// Objective, max
+P=? [ F (wpfin=1 & wps=0 & reffocc=0 & mntDone=1) ]
+
+// Objective, min
+R{"nuisance"}=? [ F (wpfin=1&wps=0&reffocc=0&mntDone=1) ]
+
+// Objective, max
+R{"effort"}=? [ F (wpfin=1&wps=0&reffocc=0&mntDone=1) ]
+
+// Objective, min
+// R{"risk_level"}=? [ C ]
+
+// Objective, max
+// R{"prod"}=? [ C ]

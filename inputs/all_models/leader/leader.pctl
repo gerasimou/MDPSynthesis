@@ -1,0 +1,15 @@
+// minimum probability of electing a leader within k steps 
+//objective, min
+Pmin=?[ true U<=K (s1=4 | s2=4 | s3=4 | s4=4) ]
+
+// maximum probability of electing a leader within k steps
+//objective, max
+Pmax=?[ true U<=K (s1=4 | s2=4 | s3=4 | s4=4) ]
+
+// minimum expected number of rounds to elect a leader
+//objective, min
+Rmin=?[ F (s1=4 | s2=4 | s3=4 | s4=4) ]
+
+// maximum expected number of rounds to elect a leader
+//objective, max 
+Rmax=?[ F (s1=4 | s2=4 | s3=4 | s4=4) ]

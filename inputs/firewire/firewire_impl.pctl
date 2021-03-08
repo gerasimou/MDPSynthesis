@@ -1,0 +1,11 @@
+// reachability
+//Objective, max
+P=? [ F ( (s1=8) & (s2=7) ) | ( (s1=7) & (s2=8) ) ]
+
+// time-bounded reachability
+//Objective, min
+Pmin=? [ F ( (s1=8) & (s2=7) ) | ( (s1=7) & (s2=8) ) ]
+
+// expected reachability
+//Objective, max
+R{"times"}max=? [ F ( (s1=8) & (s2=7) ) | ( (s1=7) & (s2=8) ) ]

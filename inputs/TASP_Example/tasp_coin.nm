@@ -1,0 +1,20 @@
+mdp 
+
+const int MAXWAIT = 3;
+
+module M
+	s:[0..4] init 0;
+	count:[1..MAXWAIT+1];
+
+	[]  s=0 -> 1:(s'=1) & (count'=1);
+	[wait] s=1 & count<MAXWAIT -> 0.7:(s'=0)
+		+ 0.3:(s'=1) & (count'=min(count+1,MAXWAIT+1));
+	[] s=1 & count>=MAXWAIT -> (s'=4);
+	[] s=1 -> 0.5:(s'=2) + 0.5:(s'=3);
+	[SUCCESS] s=2 | s=3 -> 1:(s'=s);
+	[END] s=4 -> 1:(s'=4);
+endmodule
+
+rewards "problems"
+	[wait] true : 1;	
+endrewards

@@ -1,0 +1,106 @@
+//Rabin's choice coordination problem
+//Amended 03/10/2010
+//Ensure all tourists' do not start from same location
+
+mdp 
+
+const N = 1; //Number of tourists
+
+const T = 4;
+
+const t1 = 1; //preset configuration for tourists, 0 --> 'left', 1--> 'right'
+
+const int BOUND = 8;//set to manage model size
+
+
+//======== Records update of the left noticeboard ==================
+
+module leftboard
+
+nlb : [0..BOUND] init 0;//number on  left board
+lbm : [0..1] init 0; //mode of nlb 0 --> 'even', 1 --> 'odd'
+
+[t1_nlb_up] (lbm = 0) & (t1_loc = 0) & (lin = 0) & (t1_val = nlb) & (nlb + 3 <= BOUND) -> 0.5 : (nlb' = nlb + 2) & (lbm' = 0) + 0.5 : (nlb' = nlb + 3) & (lbm' = 1);
+[t1_nlb_up] (lbm = 1) & (t1_loc = 0) & (lin = 0) & (t1_val = nlb) & (nlb + 2 <= BOUND) -> 0.5 : (nlb' = nlb + 2) & (lbm' = 1) + 0.5 : (nlb' = nlb + 1) & (lbm' = 0);
+
+endmodule
+
+//======== Records update of the right noticeboard ==================
+
+module rightboard
+
+nrb : [0..BOUND] init 0;//number on right board
+rbm : [0..1] init 0; //mode of nrb 0 --> 'even', 1 --> 'odd'
+
+
+[t1_nrb_up] (rbm = 0) & (t1_loc = 1) & (rin = 0) & (t1_val = nrb) & (nrb + 3 <= BOUND) -> 0.5 : (nrb' = nrb + 2) & (rbm' = 0) + 0.5 : (nrb' = nrb + 3) & (rbm' = 1);
+[t1_nrb_up] (rbm = 1) & (t1_loc = 1) & (rin = 0) & (t1_val = nrb) & (nrb + 2 <= BOUND) -> 0.5 : (nrb' = nrb + 2) & (rbm' = 1) + 0.5 : (nrb' = nrb + 1) & (rbm' = 0);
+
+endmodule
+
+//======== Counts the number of tourists entering the left/right meeting place ==================
+
+module counter
+
+rin : [0..N] init 0;//number of tourists inside the 'right' meeting place
+lin : [0..N] init 0;//number of tourists inside the 'left' meeting place
+
+[t1_enter_l]  (t1_loc = 0) & (flag = 0) & (lin = 0) -> (lin' = lin + 1);
+[t1_enter_r]  (t1_loc = 1) & (flag = 0) & (rin = 0) -> (rin' = rin + 1);
+
+[t1_must_l]   (t1_loc = 0) & (flag = 0) & (lin > 0) & (lin + 1 <= N) -> (lin' = lin + 1);
+[t1_must_r]   (t1_loc = 1) & (flag = 0) & (rin > 0) & (rin + 1 <= N) -> (rin' = rin + 1);
+
+endmodule
+
+//======== controls sequence of actions for tourists' at left/right location ==================
+
+module semaphore
+
+flag : [0..1] init 0;
+
+[t1_nlb_up] (flag = 0) -> (flag' = 1);
+[t1_nrb_up] (flag = 0) -> (flag' = 1);
+
+
+[t1_l_up]   (flag = 1) -> (flag' = 0);
+[t1_r_up]   (flag = 1) -> (flag' = 0);
+
+endmodule
+
+//======== Models the activity of a single tourist ==================
+
+module tourist1
+
+t1_loc : [0..2] init t1;// location of tourist 0 --> 'left', 1--> 'right', 2 -->'tourist already in'
+t1_val : [0..BOUND] init 0;//value on a tourist's notepad
+t1_com : [0..1] init 0;//tourist's command 0 --> 'idle', 1--> 'active'
+
+[t1_nlb_up]   (t1_com = 0) & (t1_loc = 0) & (lin = 0) -> (t1_com' = 1);
+[t1_nrb_up]   (t1_com = 0) & (t1_loc = 1) & (rin = 0) -> (t1_com' = 1);
+
+[t1_l_up]     (t1_com = 1) & (t1_loc = 0) & (lin = 0) -> (t1_val' = nlb) & (t1_loc' = 1) & (t1_com' = 0);
+[t1_r_up]     (t1_com = 1) & (t1_loc = 1) & (rin = 0) -> (t1_val' = nrb) & (t1_loc' = 0) & (t1_com' = 0);
+
+[t1_l_copy]   (flag = 0) & (t1_loc = 0) & (t1_val < nlb) ->  (t1_val' = nlb) & (t1_loc' = 1);
+[t1_r_copy]   (flag = 0) & (t1_loc = 1) & (t1_val < nrb) ->  (t1_val' = nrb) & (t1_loc' = 0); 
+
+[t1_enter_l]  (flag = 0) & (t1_loc = 0) & (lin = 0) & (t1_val > nlb)  -> (t1_loc' = 2);
+[t1_enter_r]  (flag = 0) & (t1_loc = 1) & (rin = 0) & (t1_val > nrb)  -> (t1_loc' = 2);
+
+[t1_must_l]   (flag = 0) & (t1_loc = 0) & (lin > 0) & (lin + 1 <= N) -> (t1_loc' = 2);
+[t1_must_r]   (flag = 0) & (t1_loc = 1) & (rin > 0) & (rin + 1 <= N) -> (t1_loc' = 2);
+
+[t1_l_exit]   (flag = 0) & (lin = N) & (t1_loc = 2) -> (t1_val' = t1_val) ;
+[t1_r_exit]   (flag = 0) & (rin = N) & (t1_loc = 2) -> (t1_val' = t1_val) ;
+
+endmodule
+
+
+//========== Assigns a reward of 1 if no convergence yet =============
+
+rewards 
+
+lin != N & rin != N : 1; 
+
+endrewards

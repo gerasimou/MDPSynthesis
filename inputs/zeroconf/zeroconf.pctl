@@ -1,0 +1,15 @@
+// find maximum probability of the host using an IP address already in use
+//Objective, max
+Pmax=? [ F (l=4 & ip=1) ]
+
+// find minimum probability of the host using an IP address already in use
+//Objective, min
+Pmin=? [ F (l=4 & ip=1) ]
+
+//to calculate the minimum expected costs of choosing an IP address
+//Objective, min
+Rmin=?[ F l=4 ]
+
+//to calculate the maximum expected costs of choosing an IP address
+//Objective, max
+Rmax=?[ F l=4 ]

@@ -1,0 +1,6 @@
+// maximum expected operations for one test and set operation is less than 10
+filter(forall, t=1 => R{"process0"}<=10 [ F t=1 & (l0=8 | l0=9) ])
+filter(forall, t=1 => R{"process1"}<=10 [ F t=1 & (l1=8 | l1=9) ])
+
+// display actual values for process 0 (once test starts)
+R{"process0"}max=? [ F t=1 & (l0=8 | l0=9) {t=1} ]

@@ -1,0 +1,28 @@
+mdp 
+const int MWAIT = 3;
+const double succ_attempt = 0.7;
+
+module M
+	s:[0..4] init 0;
+	i:[1..MWAIT+1];
+
+	[time] s=0 -> 1:(s'=1) & (i'=1);
+	[wait] s=1 & i<MWAIT -> succ_attempt:(s'=0) + (1-succ_attempt):(s'=1) & (i'=min(i+1,MWAIT+1));
+	[fail] s=1 & i>=MWAIT -> (s'=4);
+	[time] s=1 -> 0.5:(s'=2) + 0.5:(s'=3);
+	[time] s=2 | s=3 -> 1:(s'=s);
+	[time] s=4 -> 1:(s'=4);
+endmodule
+
+rewards "times"
+	[time] s=0 | s=1 : 1;
+	[time] s=2 | s=3 | s=4 : 0;
+endrewards
+
+rewards "waits"
+	[wait] s=1 & i<3 : 10;
+endrewards
+
+rewards "fails"
+	[fail] s=1 & i>=3 : 100;
+endrewards

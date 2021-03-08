@@ -1,0 +1,220 @@
+PRISM
+=====
+
+Version: 4.5.dev
+Date: Mon Mar 08 12:12:17 GMT 2021
+Hostname: Simoss-MacBook-Pro.local
+Memory limits: cudd=1g, java(heap)=4g
+
+Type:        MDP
+Modules:     medium station1 station2 
+Variables:   col c1 c2 x1 s1 slot1 backoff1 bc1 x2 s2 slot2 backoff2 bc2 
+
+---------------------------------------------------------------------
+
+Building model...
+
+Computing reachable states...
+
+Reachability (BFS): 63 iterations in 0.06 seconds (average 0.000873, setup 0.00)
+
+Time for model construction: 0.145 seconds.
+
+Type:        MDP
+States:      1707 (1 initial)
+Transitions: 2787
+Choices:     2357
+
+Transition matrix: 3893 nodes (3 terminal), 2787 minterms, vars: 32r/32c/7nd
+
+---------------------------------------------------------------------
+
+Model checking: Pmax=? [ F col=2 ]
+
+Prob0A: 28 iterations in 0.06 seconds (average 0.001964, setup 0.00)
+
+Prob1E: 44 iterations in 0.09 seconds (average 0.002091, setup 0.00)
+
+yes = 880, no = 602, maybe = 225
+
+Computing remaining probabilities...
+Engine: Hybrid
+
+Building hybrid MTBDD matrices... [nm=9, levels=32, nodes=3502] [164.2 KB]
+Adding sparse bits... [levels=32-32, num=9, compact=9/9] [17.1 KB]
+Creating vector for yes... [dist=2, compact] [3.3 KB]
+Allocating iteration vectors... [3 x 13.3 KB]
+TOTAL: [224.6 KB]
+
+Starting iterations...
+
+Iterative method: 24 iterations in 0.01 seconds (average 0.000083, setup 0.01)
+
+Value in the initial state: 0.47222222222222215
+
+Time for model checking: 0.101 seconds.
+
+Result: 0.47222222222222215 (value in the initial state)
+
+---------------------------------------------------------------------
+
+Model checking: R{"costs"}max=? [ F s1=12&s2=12 ]
+
+Prob0E: 80 iterations in 0.25 seconds (average 0.003150, setup 0.00)
+
+Prob1A: 1 iterations in 0.00 seconds (average 0.001000, setup 0.00)
+
+goal = 3, inf = 0, maybe = 1704
+
+Computing remaining rewards...
+Switching engine since hybrid engine does yet support this computation...
+Engine: Sparse
+
+Building sparse matrix (transitions)... [n=1707, nc=2354, nnz=2784, k=3] [48.5 KB]
+Building sparse matrix (transition rewards)... [n=1707, nc=2354, nnz=680, k=3] [23.8 KB]
+Creating vector for state rewards... [13.3 KB]
+Creating vector for inf... [13.3 KB]
+Allocating iteration vectors... [2 x 13.3 KB]
+TOTAL: [125.7 KB]
+
+Starting iterations...
+
+Iterative method: 448 iterations in 0.05 seconds (average 0.000067, setup 0.02)
+
+Value in the initial state: 15162.706663666362
+
+Time for model checking: 0.16 seconds.
+
+Result: 15162.706663666362 (value in the initial state)
+
+---------------------------------------------------------------------
+
+Model checking: R{"costs"}min=? [ F s1=12&s2=12 ]
+
+Prob0A: 39 iterations in 0.07 seconds (average 0.001795, setup 0.00)
+
+Prob1E: 40 iterations in 0.06 seconds (average 0.001500, setup 0.00)
+
+Warning: PRISM hasn't checked for zero-reward loops.
+Your minimum rewards may be too low...
+
+goal = 3, inf = 0, maybe = 1704
+
+Computing remaining rewards...
+Switching engine since hybrid engine does yet support this computation...
+Engine: Sparse
+
+Building sparse matrix (transitions)... [n=1707, nc=2354, nnz=2784, k=3] [48.5 KB]
+Building sparse matrix (transition rewards)... [n=1707, nc=2354, nnz=680, k=3] [23.8 KB]
+Creating vector for state rewards... [13.3 KB]
+Creating vector for inf... [13.3 KB]
+Allocating iteration vectors... [2 x 13.3 KB]
+TOTAL: [125.7 KB]
+
+Starting iterations...
+
+Iterative method: 66 iterations in 0.01 seconds (average 0.000045, setup 0.01)
+
+Value in the initial state: 3375.0
+
+Time for model checking: 0.084 seconds.
+
+Result: 3375.0 (value in the initial state)
+
+---------------------------------------------------------------------
+
+Model checking: R{"collisions"}max=? [ F s1=12&s2=12 ]
+
+Prob0E: 80 iterations in 0.06 seconds (average 0.000687, setup 0.00)
+
+Prob1A: 1 iterations in 0.00 seconds (average 0.002000, setup 0.00)
+
+goal = 3, inf = 0, maybe = 1704
+
+Computing remaining rewards...
+Switching engine since hybrid engine does yet support this computation...
+Engine: Sparse
+
+Building sparse matrix (transitions)... [n=1707, nc=2354, nnz=2784, k=3] [48.5 KB]
+Building sparse matrix (transition rewards)... [n=1707, nc=2354, nnz=18, k=3] [16.1 KB]
+Creating vector for state rewards... [13.3 KB]
+Creating vector for inf... [13.3 KB]
+Allocating iteration vectors... [2 x 13.3 KB]
+TOTAL: [117.9 KB]
+
+Starting iterations...
+
+Iterative method: 407 iterations in 0.04 seconds (average 0.000086, setup 0.01)
+
+Value in the initial state: 1.894697269065586
+
+Time for model checking: 0.061 seconds.
+
+Result: 1.894697269065586 (value in the initial state)
+
+---------------------------------------------------------------------
+
+Model checking: R{"times"}max=? [ F s1=12&s2=12 ]
+
+Prob0E: 80 iterations in 0.05 seconds (average 0.000675, setup 0.00)
+
+Prob1A: 1 iterations in 0.00 seconds (average 0.000000, setup 0.00)
+
+goal = 3, inf = 0, maybe = 1704
+
+Computing remaining rewards...
+Switching engine since hybrid engine does yet support this computation...
+Engine: Sparse
+
+Building sparse matrix (transitions)... [n=1707, nc=2354, nnz=2784, k=3] [48.5 KB]
+Building sparse matrix (transition rewards)... [n=1707, nc=2354, nnz=680, k=3] [23.8 KB]
+Creating vector for state rewards... [13.3 KB]
+Creating vector for inf... [13.3 KB]
+Allocating iteration vectors... [2 x 13.3 KB]
+TOTAL: [125.7 KB]
+
+Starting iterations...
+
+Iterative method: 447 iterations in 0.04 seconds (average 0.000054, setup 0.01)
+
+Value in the initial state: 2563.0774861142645
+
+Time for model checking: 0.059 seconds.
+
+Result: 2563.0774861142645 (value in the initial state)
+
+---------------------------------------------------------------------
+
+Model checking: R{"times"}min=? [ F s1=12&s2=12 ]
+
+Prob0A: 39 iterations in 0.02 seconds (average 0.000436, setup 0.00)
+
+Prob1E: 40 iterations in 0.03 seconds (average 0.000650, setup 0.00)
+
+Warning: PRISM hasn't checked for zero-reward loops.
+Your minimum rewards may be too low...
+
+goal = 3, inf = 0, maybe = 1704
+
+Computing remaining rewards...
+Switching engine since hybrid engine does yet support this computation...
+Engine: Sparse
+
+Building sparse matrix (transitions)... [n=1707, nc=2354, nnz=2784, k=3] [48.5 KB]
+Building sparse matrix (transition rewards)... [n=1707, nc=2354, nnz=680, k=3] [23.8 KB]
+Creating vector for state rewards... [13.3 KB]
+Creating vector for inf... [13.3 KB]
+Allocating iteration vectors... [2 x 13.3 KB]
+TOTAL: [125.7 KB]
+
+Starting iterations...
+
+Iterative method: 58 iterations in 0.01 seconds (average 0.000034, setup 0.01)
+
+Value in the initial state: 675.0
+
+Time for model checking: 0.054 seconds.
+
+Result: 675.0 (value in the initial state)
+
+Exporting transition matrix in plain text format to file "wlan.tra"...

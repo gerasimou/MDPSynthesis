@@ -1,0 +1,42 @@
+// probabilistic fair exchange [Rab81]
+// Gethin Norman and Vitaly Shmatikov 2004
+
+mdp
+
+module parties
+	
+	mA : [0..10]; // number in the last message sent by A
+	mB : [0..10]; // number in the last message sent by B
+	turn : [0..1]; // who last sent a message (0- B did and 1 - A did)
+	
+	// can only send messages when d=0 (i.e. before the future date arrives)
+	[] turn=0 & mA<10 & d=0 -> (turn'=1) & (mA'=mA+1); // party A sends a message
+	[] turn=1 & mA<10 & d=0 -> (turn'=0) & (mB'=mA); // party B sends a message
+	
+endmodule
+
+module date
+	
+	d : [0..1]; 
+	
+	[] d=0 -> (d'=1); // future date arrives 
+	
+endmodule
+
+module third_party
+	
+	i  : [0..10]; // integer chosen
+	
+	// randomly choose integer on the future date
+	[] i=0 & d=1 -> 1/10 : (i'=1) 
+                  + 1/10 : (i'=2)
+                  + 1/10 : (i'=3)
+                  + 1/10 : (i'=4)
+                  + 1/10 : (i'=5)
+                  + 1/10 : (i'=6)
+                  + 1/10 : (i'=7)
+                  + 1/10 : (i'=8)
+                  + 1/10 : (i'=9)
+                  + 1/10 : (i'=10);
+
+endmodule

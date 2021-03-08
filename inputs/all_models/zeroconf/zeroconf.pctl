@@ -1,0 +1,6 @@
+// Maximum probability of configuring correctly
+Pmax=? [ F (l=4 & ip=1) ]
+
+//to calculate the expected costs
+Rmin=?[ F l=4 ] 
+Rmax=?[ F l=4 ]

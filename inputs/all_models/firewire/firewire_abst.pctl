@@ -1,0 +1,9 @@
+// reachability
+P>=1[ F (s=9) ]
+
+// time-bounded reachability
+Pmin=? [ F (s=9) ]
+
+// expected reachability
+R{"time"}max=?[ F (s=9) ] and R{"rounds"}max=?[ F (s=9) ]
+

@@ -1,0 +1,8 @@
+// reachability
+P>=1[ F ( (s1=8) & (s2=7) ) | ( (s1=7) & (s2=8) ) ]
+
+// time-bounded reachability
+Pmin=? [ F ( (s1=8) & (s2=7) ) | ( (s1=7) & (s2=8) ) ]
+
+// expected reachability
+R{"time"}max=? [ F ( (s1=8) & (s2=7) ) | ( (s1=7) & (s2=8) ) ]

@@ -1,0 +1,14 @@
+// time-bounded reachability
+// probability of a leader being elected 
+//Objective, max
+Pmax=? [ F (s=9) ]
+
+// expected reachability in time
+// min time required to finish protocol
+//Objective, min
+R{"times"}min=?[ F (s=9) ]
+
+// expected reachability in rounds
+// number of rounds to finish protocol
+//Objective, min
+R{"rounds"}min=?[ F (s=9) ]

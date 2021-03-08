@@ -1,0 +1,18 @@
+// Objective, max
+P=? [ F (wpfin=1 & reffocc=0 & mntDone=1 & wps=0 ) ]
+
+// all
+//P=? [ F ((wpfin=1) & (reffocc=1) & (mntDone=1) & (wps=0)) ]
+//P=? [ F ((wpfin=1) & (reffocc=1) & (mntDone=0) & (wps=0)) ]
+//P=? [ F ((wpfin=1) & (reffocc=0) & (mntDone=1) & (wps=0)) ]
+//P=? [ F ((wpfin=0) & (reffocc=1) & (mntDone=1) & (wps=0)) ]
+//P=? [ F ((wpfin=1) & (reffocc=0) & (mntDone=0) & (wps=0)) ]
+//P=? [ F ((wpfin=0) & (reffocc=0) & (mntDone=1) & (wps=0)) ]
+//P=? [ F ((wpfin=0) & (reffocc=1) & (mntDone=0) & (wps=0)) ]
+//P=? [ F ((wpfin=0) & (reffocc=0) & (mntDone=0) & (wps=0)) ]
+
+// Objective, min
+//R{"nuisance"}=? [ C ]
+
+// Objective, max
+//R{"efsfort"}=? [ C ]

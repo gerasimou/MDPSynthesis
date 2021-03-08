@@ -1,0 +1,14 @@
+//Objective, max
+Pmax=? [F ( s=2 | s=3 )]
+//Objective, min
+R{"times"}min=?[ F ( s>=2 )]
+//Objective, max
+R{"times"}max=?[ F ( s>=2 )]
+//Objective, min
+R{"waits"}min=?[ F ( s>=2 )]
+//Objective, max
+R{"waits"}max=?[ F ( s>=2 )]
+//Objective, min
+R{"fails"}min=?[ F ( s>=2 )]
+//Objective, max
+R{"fails"}max=?[ F ( s>=2 )]

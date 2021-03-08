@@ -1,0 +1,6 @@
+//Objective, max
+Pmax=? [ F "finished" ]
+//Objective, min
+R{"costs"}min=? [F "finished"]
+//Objective, max
+R{"costs"}max=? [F "finished"]

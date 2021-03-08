@@ -1,0 +1,8 @@
+//probability of steps T would have converged at the same meeting place.
+//Pmin=? [ F<=T (lin= N | rin = N) ]
+
+//minimum number of rounds until all meet the convergence condition
+Rmin=? [ F (lin= N | rin = N) ]
+
+//maximum number of rounds until all meet the convergence condition
+Rmax=? [ F (lin= N | rin = N) ]
