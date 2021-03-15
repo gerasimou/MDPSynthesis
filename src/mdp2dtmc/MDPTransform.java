@@ -20,6 +20,7 @@ import org.spg.PrismAPI.PrismAPI;
 import org.spg.PrismAPI.PrismParamAPI;
 import org.spg.utils.PrismAPIUtilities;
 
+import property.Label;
 import property.Objective;
 import property.Property;
 import property.parser.PCTLParser;
@@ -33,7 +34,7 @@ public class MDPTransform {
 	private String modelName = "OutputTemplate";
 	private String modelPath = null;
 	private String propPath = null;
-	private File template = null;
+	private File evoTemplate = null;
 	private String traContent;
 	private String evoContent;
 	private Map<String, Integer> evolveMax = null;
@@ -57,6 +58,7 @@ public class MDPTransform {
 		}
 	}
 
+
 	public MDPTransform(String content, boolean isPath) {
 		if (!isPath) {
 			this.traContent = content;
@@ -69,14 +71,15 @@ public class MDPTransform {
 		}
 	}
 
+	
 	public void run() throws Exception {
 		System.out.println("Creating EvoChecker template...");
 		Map<List<String>, String> options = new LinkedHashMap<List<String>, String>();
 		buildRewardStructureAndStates();
 		prepareMap(options);
 		evoContent = getEvoCheckerContent(options);
-		template = toEvoCheckerTemplate(evoContent);
-		System.out.println("EvoChecker template created: " + template.getPath());
+		evoTemplate = toEvoCheckerTemplate(evoContent);
+		System.out.println("EvoChecker template created: " + evoTemplate.getPath());
 		transformPropertyExpressions(modelPath, propPath);
 		if (badItems.size() > 0)
 			System.out.println("Number of bad items: " + badItems.size());
@@ -340,16 +343,16 @@ public class MDPTransform {
 
 	public File toEvoCheckerTemplate(String evoContent) throws Exception {
 		String path = modelName;
-		template = new File(path + ".pm");
-		FileWriter fw = new FileWriter(template);
+		evoTemplate = new File(path + ".pm");
+		FileWriter fw = new FileWriter(evoTemplate);
 		fw.write(evoContent);
 		fw.flush();
 		fw.close();
-		return template;
+		return evoTemplate;
 	}
 
 	public File getEvoTemplate() {
-		return template;
+		return evoTemplate;
 	}
 
 	private Map<String, List<RewardItem>> cachedItems = new HashMap<String, List<RewardItem>>();
@@ -403,8 +406,8 @@ public class MDPTransform {
 
 	private List<RewardItem> badItems = new ArrayList<RewardItem>();
 
-	private void buildRewardStructureAndStates() throws Exception {
 
+	private void buildRewardStructureAndStates() throws Exception {
 		// 1. Read all reward items in the original model and
 		// generate necessary structure
 		File m = new File(modelPath);
@@ -517,7 +520,8 @@ public class MDPTransform {
 		// Get states info
 		// String s = api.getModelStatesInfo();
 
-		PCTLParser parser = new PCTLParser();
+		List<Label> l = new ArrayList<Label>();
+		PCTLParser parser = new PCTLParser(l);
 
 		parser.readFileForLabels(mFile);
 

@@ -1,0 +1,5 @@
+// Objective, max
+P=? [ F (wpfin=1 & reffocc=0 & mntDone=1 & wps=0 ) ]
+
+// Objective, min
+R{"nuisance"}=? [ C ]

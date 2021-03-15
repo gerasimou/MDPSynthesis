@@ -1,0 +1,6 @@
+//Objective, max
+P=? [ F(u=2|u=3) ]
+
+
+// Objective, min
+R{"nuisance"}=? [ C ]

@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.spg.PrismAPI.PrismParamAPI;
 import org.spg.utils.PrismAPIUtilities;
 
+import property.Label;
 import property.Objective;
 import property.Property;
 import property.parser.PCTLParser;
@@ -104,7 +105,8 @@ public class Main2 {
 		// Get states info
 		String s = api.getModelStatesInfo();
 
-		PCTLParser parser = new PCTLParser();
+		List<Label> l = new ArrayList<Label>();
+		PCTLParser parser = new PCTLParser(l);
 
 		parser.readFileForLabels(modelFile);
 
@@ -128,7 +130,8 @@ public class Main2 {
 		// Get states info
 		// String s = api.getModelStatesInfo();
 
-		PCTLParser parser = new PCTLParser();
+		List<Label> l = new ArrayList<Label>();
+		PCTLParser parser = new PCTLParser(l);
 
 		parser.readFileForLabels(modelFile);
 

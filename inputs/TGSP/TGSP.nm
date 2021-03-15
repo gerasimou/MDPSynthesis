@@ -1,3 +1,5 @@
+
+
 mdp
 
 label "tasks_complete" = (task6=3);
@@ -79,13 +81,18 @@ module P2
 
 endmodule
 
-rewards "times" 
+rewards "time" 
+
 	[time] true : 1/K;
+
 endrewards
 
 rewards "energy" 
+
 	[time] p1=0 : 10/(1000*K);
 	[time] p1>0 : 90/(1000*K);
 	[time] p2=0 : 20/(1000*K);
 	[time] p2>0 : 30/(1000*K);
+
 endrewards
+

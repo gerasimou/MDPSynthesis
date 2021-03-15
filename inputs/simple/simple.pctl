@@ -1,0 +1,8 @@
+//Objective, max
+Pmax=?[F s>2]
+
+Pmax=?[F s=2]
+
+R{"cost"}max=?[F s=2]
+
+R{"cost"}max=?[!s=3 U s=2]

@@ -1,9 +1,5 @@
-// "tasks_complete" = (task6=3)
-//Objective, max
-Pmax=? [F (task6=3)]
-// Minimise expected completion time
 //Objective, min
-R{"times"}min=? [F (task6=3)]
-// Minimise expected energy usage
+R{"energy"}min=?[ C ]
+
 //Objective, min
-R{"energy"}min=? [F (task6=3)]
+R{"time"}min=? [ C ]

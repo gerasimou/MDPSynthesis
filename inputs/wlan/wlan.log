@@ -1,0 +1,27 @@
+PRISM
+=====
+
+Version: 4.5.dev
+Date: Sat Mar 13 00:54:10 GMT 2021
+Hostname: Simoss-MacBook-Pro.local
+Memory limits: cudd=1g, java(heap)=4g
+
+Type:        MDP
+Modules:     medium station1 station2 
+Variables:   col c1 c2 x1 s1 slot1 backoff1 bc1 x2 s2 slot2 backoff2 bc2 
+
+---------------------------------------------------------------------
+
+Building model...
+
+Computing reachable states... 1707 states
+Reachable states exploration and model construction done in 0.217 secs.
+Sorting reachable states list...
+
+Time for model construction: 0.251 seconds.
+
+Type:        MDP
+States:      1707 (1 initial)
+Transitions: 2787
+Choices:     2357
+Max/avg:     3/1.38

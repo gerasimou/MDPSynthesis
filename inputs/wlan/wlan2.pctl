@@ -1,0 +1,23 @@
+// Maximum probability of COL collisions
+//Objective, max
+Pmax=? [ F col=2 ];
+
+// Maximum expected cost for both stations to send correctly
+//Objective, max
+R{"costs"}max=? [ F s1=12 & s2=12 ];
+
+// Minimum expected cost for both stations to send correctly
+//Objective, min
+R{"costs"}min=? [ F s1=12 & s2=12 ];
+
+// Maximum expected collisions before both stations to send correctly
+// Objective, max
+R{"collisions"}max=? [ F s1=12 & s2=12 ];
+
+// Maximum expected time for both stations to send correctly
+// Objective, max
+R{"times"}max=? [ F s1=12 & s2=12 ];
+
+// Minimum expected time for both stations to send correctly
+// Objective, min 
+R{"times"}min=? [ F s1=12 & s2=12 ];

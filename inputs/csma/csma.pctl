@@ -1,19 +1,7 @@
-// maximum reachability
-//Objective, max
-//Pmax=? [ F "all_delivered" ];
 
-// Minimum probability all stations send successfully before a collision with max backoff
 //Objective, min 
-Pmin=? [ !"collision_max_backoff" U "all_delivered" ];
+Pmin=? [ !((cd1=2 & s1=1 & b=2)|(cd2=2 & s2=1 & b=2)) U s1=4&s2=4 ];
 
 //Minimum expected time for all messages to be sent
 //Objective, min
-R{"time"}min=? [ F "all_delivered" ];
-
-// Minimum probability that some station eventually delivers with less than K backoffs
-//Objective, min
-//"some_before": Pmin=? [ F min_backoff_after_success<K ];
-
-
-
-
+R{"time"}min=? [ F s1=4&s2=4 ];

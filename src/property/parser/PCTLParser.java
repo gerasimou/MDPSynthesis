@@ -21,10 +21,10 @@ public class PCTLParser implements IPropertyParser {
 	private String propertyFileName;
 	private String modelFileName;
 
-	public PCTLParser() {
-		propertyList = new ArrayList<Property>();
-		labelList = new ArrayList<>();
-		cachedLabel = new LinkedHashMap<String, Label>();
+	public PCTLParser(List<Label> labelList) {
+		propertyList 	= new ArrayList<Property>();
+		this.labelList 	= labelList;
+		cachedLabel 	= new LinkedHashMap<String, Label>();
 	}
 
 	@SuppressWarnings("resource")

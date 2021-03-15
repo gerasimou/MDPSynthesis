@@ -1,0 +1,7 @@
+Pmax=? [ F x=3 ]
+
+Pmax=? [ F x=2 ]
+
+R{"cost"}max=? [ F x=2 ]
+
+R{"cost"}max=? [ U x=2 ]
