@@ -1,0 +1,13 @@
+//multi(Pmax=? [ F "done"], R{"SV"}max=? [ C ])
+
+// R{"EC"}<=500 [ C ]
+
+//multi(Pmax=? [ F "done"], R{"EC"}min=? [ C ])
+
+
+//multi(R{"SV"}max=? [ C ], R{"EC"}min=? [ C ])
+
+
+R{"SV"}max=? [ C ]
+
+R{"EC"}min=? [ C ]

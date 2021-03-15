@@ -1,0 +1,5 @@
+//OBJECTIVE, MAX
+R{"SV"}max=? [ C ]
+
+//OBJECTIVE, MIN
+R{"EC"}min=? [ C ]
