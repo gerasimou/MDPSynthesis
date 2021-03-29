@@ -1,14 +1,18 @@
-package mdp2dtmc;
+package mdpSynthesis;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 
 import explicit.MDPSparse;
 import parser.State;
+import parser.Values;
 import parser.VarList;
 import parser.ast.Expression;
 import parser.ast.ExpressionBinaryOp;
+import parser.ast.ExpressionFormula;
+import parser.ast.ExpressionLabel;
 import parser.ast.ExpressionProb;
 import parser.ast.ExpressionQuant;
 import parser.ast.ExpressionReward;
@@ -40,7 +44,7 @@ public class PropertiesVisitor extends ASTTraverse{
 	}
 
 	public void visitPost(ExpressionReward e) throws PrismLangException {
-		System.out.println(e.toString());
+//		System.out.println(e.toString());
 		
 		Expression e1 = e.getExpression();
 		if (e1 instanceof ExpressionTemporal && e1!=null) {
@@ -54,7 +58,7 @@ public class PropertiesVisitor extends ASTTraverse{
 	
 	
 	public void visitPost(ExpressionProb e) throws PrismLangException {
-		System.out.println(e.toString());
+//		System.out.println(e.toString());
 		Expression e1 = e.getExpression();
 		if (e1 instanceof ExpressionTemporal) {
 			((ExpressionTemporal)e1).accept(vv);
@@ -65,8 +69,13 @@ public class PropertiesVisitor extends ASTTraverse{
 
 	private String toString(ExpressionProb e) {
 		String s = "";
-		s += "P" + e. getModifierString() + e.getRelOp();
-		s += (e.getBound() == null) ? "?" : e.getBound().toString();
+//		if (e.getBound() == null) {//an objective			
+//			s += "P" + e. getModifierString() + e.getRelOp();
+//			s += (e.getBound() == null) ? "?" : e.getBound().toString();
+//		}
+//		else {//a constraint
+			s += "P" + e. getModifierString() + "=?";
+//		}
 		
 		Expression e1 = e.getExpression();
 		String symbol ="";
@@ -98,8 +107,17 @@ public class PropertiesVisitor extends ASTTraverse{
 //				else if (e.rewardStructIndexDiv instanceof String) s += "{\""+e.rewardStructIndexDiv+"\"}";
 //			}
 		}
-		s += e.getRelOp();
-		s += (e.getBound()==null) ? "?" : e.getBound().toString();
+		
+		s += "=?";
+		
+//		if (e.getBound() == null) {//an objective			
+//			s += e.getRelOp();
+//			s += e.getBound().toString();
+//		}
+//		else {//a constraint
+//			s += "=?";
+//		}
+
 		
 		Expression e1 = e.getExpression();
 		String symbol ="";
@@ -123,9 +141,23 @@ public class PropertiesVisitor extends ASTTraverse{
 		//Specify whether it is a constraint: CONSTRAINT, MAX/MIN, 0.9
 		//or objective: OBJETIVE, MAX/MIN
 		String req = "//";
-		req += (e.getBound() == null) ? "OBJECTIVE, " : "CONSTRAINT, ";
-		req += e.getRelOp().name().substring(0, e.getRelOp().name().length());
-		req += (e.getBound() == null) ? "" : e.getBound().toString();
+		if (e.getBound() == null) {//it is an objective
+			req += "OBJECTIVE,";
+			req += e.getRelOp().name().substring(0, e.getRelOp().name().length());
+		}
+		else {
+			req += "CONSTRAINT, ";
+			if (e.getRelOp().isLowerBound())
+				req += "MIN, ";
+			else
+				req += "MAX, ";
+
+//			req += e.getRelOp().name().substring(0, e.getRelOp().name().length());
+			req += e.getBound().toString();
+		}
+//		req += (e.getBound() == null) ? "OBJECTIVE, " : "CONSTRAINT, ";
+//		req += e.getRelOp().name().substring(0, e.getRelOp().name().length());
+//		req += (e.getBound() == null) ? "" : e.getBound().toString();
 
 		return req;
 	}
@@ -183,19 +215,25 @@ public class PropertiesVisitor extends ASTTraverse{
 				return;
 			}
 			
-			if (e1 instanceof ExpressionBinaryOp || e1 instanceof ExpressionUnaryOp) {
+			if (e1 instanceof ExpressionBinaryOp || e1 instanceof ExpressionUnaryOp || e1 instanceof ExpressionFormula) {
 				s += evaluate (e1);
 			}
 			else if (e1 != null)
 				throw new PrismLangException("Unsupported expression: " + e);
 
-			if (e2 instanceof ExpressionBinaryOp || e2 instanceof ExpressionUnaryOp) {
+			if (e2 instanceof ExpressionBinaryOp || e2 instanceof ExpressionUnaryOp || e2 instanceof ExpressionFormula) {
 				s += " "+ e.getOperatorSymbol() +" "+ evaluate(e2);
+			}
+			else if (e2 instanceof ExpressionLabel) {
+				String label = ((ExpressionLabel)e2).getName();
+//				modulesFile.getl
+				BitSet bitS = mdpModel.getLabelStates(label);
+				System.out.println(String.join(bitS.toString(), "-"));
 			}
 			else if (e2 != null)
 				throw new PrismLangException("Unsupported expression: " + e);
 
-			exprString = s;
+			exprString = s; 
 		}
 		
 		
@@ -204,8 +242,10 @@ public class PropertiesVisitor extends ASTTraverse{
 			List<State> statesList = mdpModel.getStatesList();
 			int numStates = statesList.size();
 			
+			Values constantValues = mdpModel.getConstantValues();
+			
 			for (int i = 0; i < numStates; i++) {
-				boolean b = e.evaluateBoolean(statesList.get(i));
+				boolean b = e.evaluateBoolean(constantValues, statesList.get(i));
 				if (b)
 					validStates.add(i);
 			}
