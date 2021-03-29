@@ -1,0 +1,27 @@
+PRISM
+=====
+
+Version: 4.5.dev
+Date: Sat Mar 20 02:18:10 GMT 2021
+Hostname: Simoss-MacBook-Pro.local
+Memory limits: cudd=1g, java(heap)=4g
+
+Type:        MDP
+Modules:     forex strategyOp11 strategyOp12 strategyOp21 strategyOp2 strategyOp3 strategyOp4 strategyOp5 strategyOp6 
+Variables:   state srv1 srv2 seqOp1 operation11 stepOp1 operation12 operation21 stepOp2 operation22 operation3 operation4 operation5 operation6 
+
+---------------------------------------------------------------------
+
+Building model...
+
+Computing reachable states... 1530 states
+Reachable states exploration and model construction done in 0.143 secs.
+Sorting reachable states list...
+
+Time for model construction: 0.171 seconds.
+
+Type:        MDP
+States:      1530 (1 initial)
+Transitions: 2187
+Choices:     1638
+Max/avg:     6/1.07

@@ -1,5 +1,3 @@
-//Objective, min 
-R{"power"}min=? [ C<=100 ]
-
-//Objective, min
-R{"queue"}min=? [ C<=100 ]
+ //multi(R{"power"}min=? [ C<=100 ], R{"queue"}min=? [ C<=100 ])
+ 
+ multi(R{"power"}min=? [ C<=100 ], R{"lost"}min=? [ C<=100 ]) 

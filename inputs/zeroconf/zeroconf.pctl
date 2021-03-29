@@ -1,6 +1,0 @@
-//Objective, max
-Pmax=? [ F l=4 & ip=1 ] 
-
-//Objective, max
-Pmax=? [ G (error=0)]
-

@@ -1,0 +1,5 @@
+//OBJECTIVE, MIN
+R{"power"}min=? [ C<=100 ]
+
+//OBJECTIVE, MIN
+R{"queue"}min=? [ C<=100 ]

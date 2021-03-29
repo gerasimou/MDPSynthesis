@@ -152,10 +152,9 @@ endrewards
 // is an instantaneous property but I suppose we can look at average size
 // i.e. divide by the expected number of time steps
 rewards "queue"
-	[tick2] c=1  : q;
+	[tick2] c=1  : 1;//q;
 endrewards
 
 rewards "lost"
 	[tick2] sr=1 & sp>0 & q=2  : 1;
 endrewards
-

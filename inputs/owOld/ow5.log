@@ -1,0 +1,29 @@
+PRISM
+=====
+
+Version: 4.5.dev
+Date: Mon Mar 22 20:08:58 GMT 2021
+Hostname: Simoss-MacBook-Pro.local
+Memory limits: cudd=1g, java(heap)=4g
+
+Type:        MDP
+Modules:     autonomy 
+Variables:   s loc tried_xloc1 tried_xloc2 tried_xloc3 tried_xloc4 tried_xloc5 
+
+---------------------------------------------------------------------
+
+Building model...
+
+Computing reachable states... 321 states
+Reachable states exploration and model construction done in 0.057 secs.
+Sorting reachable states list...
+
+Time for model construction: 0.103 seconds.
+
+Warning: Deadlocks detected and fixed in 160 states
+
+Type:        MDP
+States:      321 (1 initial)
+Transitions: 895
+Choices:     730
+Max/avg:     5/2.27

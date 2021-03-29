@@ -1,0 +1,25 @@
+//multi(Pmax=? [ F s=2], R{"SV"}max=? [ C ])
+
+
+//multi(Pmax=? [ F s=2], R{"SV"}max=? [ C ], R{"EC"}min=? [ C ])
+
+//multi(R{"SV"}max=? [ C ], R{"EC"}min=? [ C ], Pmax=? [ F "done"])
+
+// R{"EC"}<=500 [ C ]
+
+//multi(Pmax=? [ F "done"], R{"EC"}min=? [ C ])
+
+
+
+
+//Pmax=? [ F "done"]
+
+//R{"SV"}max=? [ C ]
+
+//R{"EC"}min=? [ C ]
+
+
+
+multi(R{"EC"}min=? [ C ], R{"SV"}max=? [ C ])
+
+//multi(Pmax>0.999 [ F s=2], R{"EC"}min=? [ C ], R{"SV"}max=? [ C<100 ])

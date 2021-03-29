@@ -1,13 +1,10 @@
-//multi(Pmax=? [ F "done"], R{"SV"}max=? [ C ])
+//const int C1;
 
-// R{"EC"}<=500 [ C ]
+multi(R{"SV"}max=? [ C ], R{"EC"}min=? [ C ], P>0.9 [ F s=DONE_DUMPING ])
 
-//multi(Pmax=? [ F "done"], R{"EC"}min=? [ C ])
+//R{"EC"}<=500 [ C ]
 
+//multi(Pmax=? [ F "done" ], R{"EC"}min=? [ C ])
 
-//multi(R{"SV"}max=? [ C ], R{"EC"}min=? [ C ])
+//multi(R{"T"}min=? [ C ], R{"EC"}min=? [ C ])
 
-
-R{"SV"}max=? [ C ]
-
-R{"EC"}min=? [ C ]
