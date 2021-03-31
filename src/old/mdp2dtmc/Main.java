@@ -1,4 +1,4 @@
-package mdp2dtmc;
+package old.mdp2dtmc;
 
 import evochecker.EvoChecker;
 import evochecker.plotting.PlotFactory;

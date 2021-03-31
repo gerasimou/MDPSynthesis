@@ -1,8 +1,9 @@
-package mdp2dtmc;
+package old.mdp2dtmc;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,217 +20,86 @@ import org.spg.PrismAPI.PrismAPI;
 import org.spg.PrismAPI.PrismParamAPI;
 import org.spg.utils.PrismAPIUtilities;
 
-import property.Label;
-import property.Objective;
-import property.Property;
-import property.parser.PCTLParser;
-import utilities.FileUtil;
+import old.property.Label;
+import old.property.Objective;
+import old.property.Property;
+import old.property.parser.PCTLParser;
 
-public class MDPTransformation {
-	
-	private String modelFName;
-	private String propertiesFName;
-	private String modelName;
-	private String transitionMatrixFile;
-	private String basePath;
-	
-	private String evoTemplateFileName;
-	private String evoPropertiesFileName;
-	
-	private Map<String, List<RewardItem>> rewardStrcutures = new HashMap<String, List<RewardItem>>();
-	private Map<String, Integer> evolveMax = null;
-	private List<RewardItem> badItems = new ArrayList<RewardItem>();
-	
-	public final String STATE = "u";
-	public final String EVOVAR = "o";
+public class MDPTransform {
+
+	public static final String STATE = "u";
+	public static final String EVOVAR = "o";
+
 	private int maxState = 0;
+	private String modelName = "OutputTemplate";
+	private String modelPath = null;
+	private String propPath = null;
+	private File evoTemplate = null;
+	private String traContent;
+	private String evoContent;
+	private Map<String, Integer> evolveMax = null;
+	private Map<String, List<RewardItem>> rewardStrcutures = new HashMap<String, List<RewardItem>>();
 
-	private List<Label> labelList;
-
-	
-	
-	public MDPTransformation (String modelFile, String propertiesFile) {
-		this.modelFName 		= modelFile;
-		this.propertiesFName	= propertiesFile;
-		
-		File modelF	= new File(modelFName);
-		this.basePath  = modelF.getParent(); 
-		this.modelName		= modelFName.substring(modelFName.lastIndexOf("/") + 1, modelFName.lastIndexOf("."));
-		transitionMatrixFile = basePath + File.separator + modelName +".tra";
-		
-		getTransitionMatrix();
-		
-		labelList = new ArrayList<>();
-	}
-	
-	
-	/**
-	 * Get the transition matrix of specified modelFile and propertiesFile
-	 */
-	private void getTransitionMatrix() {
+	public MDPTransform(String model, String prop) {
+		modelPath = model;
+		propPath = prop;
+		modelName = model.substring(model.lastIndexOf("/") + 1, model.lastIndexOf("."));
+		PrismAPI prism = new PrismAPI(modelName + ".log");
 		try {
-			PrismAPI api = new PrismAPI(basePath + File.separator + modelName +".log");
-			api.parseModelAndPropertiesFiles(modelFName, propertiesFName);
-			api.buildModel();
-			api.getTransitionMatrix(transitionMatrixFile);
-			api.closeDown();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-	}
-	
-	
-	public void run() {
-		System.out.println("Creating EvoChecker template...");
-		
-		try {
-			Map<List<String>, String> options = new LinkedHashMap<List<String>, String>();
-			buildRewardStructureAndStates();
-			prepareMap(options);
-			String evoContent = getEvoCheckerContent(options);
-			
-			//Save EvoChecker template to file
-			evoTemplateFileName = basePath + File.separator + modelName+ "Evo.pm";
-			FileUtil.saveToFile(evoTemplateFileName, evoContent, false);
-//			toEvoCheckerTemplate(evoContent);
-			System.out.println("EvoChecker template created: " + evoTemplateFileName);
-			
-			transformProperties(modelFName, propertiesFName);
-			if (badItems.size() > 0)
-				System.out.println("Number of bad items: " + badItems.size());
+			prism.parseModelAndPropertiesFiles(model, prop);
+			prism.buildModel();
+			prism.runPrism();
+			prism.getTransitionMatrix(modelName + ".tra");
+			prism.closeDown();
+			this.traContent = getTransitionMatrixContent(modelName + ".tra");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+			System.exit(1);
+		}
 	}
+
+
+	public MDPTransform(String content, boolean isPath) {
+		if (!isPath) {
+			this.traContent = content;
+		} else {
+			try {
+				this.traContent = getTransitionMatrixContent(content);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	
-	
-	private void buildRewardStructureAndStates() throws Exception {
-		// 1. Read all reward items in the original model and
-		// generate necessary structure
-		BufferedReader br = new BufferedReader(new FileReader(modelFName));
+	public void run() throws Exception {
+		System.out.println("Creating EvoChecker template...");
+		Map<List<String>, String> options = new LinkedHashMap<List<String>, String>();
+		buildRewardStructureAndStates();
+		prepareMap(options);
+		evoContent = getEvoCheckerContent(options);
+		evoTemplate = toEvoCheckerTemplate(evoContent);
+		System.out.println("EvoChecker template created: " + evoTemplate.getPath());
+		transformPropertyExpressions(modelPath, propPath);
+		if (badItems.size() > 0)
+			System.out.println("Number of bad items: " + badItems.size());
+	}
+
+	private String getTransitionMatrixContent(String transition_matrix) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		File f = new File(transition_matrix);
+		BufferedReader br = new BufferedReader(new FileReader(f));
 		String line;
 		while ((line = br.readLine()) != null) {
-			if (line.startsWith("//"))
-				continue;
-
-			//handle labels
-			if (line.startsWith("label ")) {
-				handleLabel(line);
-			}
-			//handle rewards
-			else {
-				String ss[] = line.split(" ");
-				if (ss != null && ss.length >= 1 && ss[0].equals("rewards")) {
-					// reward_content.append(String.format("rewards \"%s\"\n", str));
-					String reward_name = "all";
-					if (ss.length >= 2 && ss[1] != null) {
-						reward_name = ss[1].replaceAll("^\"|\"$", "");
-					}
-					// read all reward items in this reward structure
-					List<RewardItem> items = new ArrayList<RewardItem>();
-					String inline = br.readLine();
-					while (!inline.equals("endrewards")) {
-						if ((!(inline.startsWith("//") || inline.startsWith("\t//"))) && inline.contains("[")
-								&& inline.contains("]")) {
-							// build a reward item
-							String label = inline.substring(inline.indexOf("[") + 1, inline.indexOf("]"));
-							String guard = inline.substring(inline.indexOf("]") + 1, inline.indexOf(":"));
-							String reward = inline.substring(inline.indexOf(":") + 1, inline.indexOf(";"));
-							RewardItem i = new RewardItem(label.trim(), guard.trim(), reward.trim(), reward_name);
-							items.add(i);
-						}
-						inline = br.readLine();
-					}
-					// add all items to a reward structure
-					rewardStrcutures.put(reward_name, items);
-				}
-			}
-			
+			sb.append(line + "\n");
 		}
 		br.close();
-
-		// 2. read the generate new model file with dummay parametic var and
-		// evaluate all reward items and obtain their satisfying states
-		PrismParamAPI api = new PrismParamAPI();
-		String model = PrismAPIUtilities.readModelFile(modelFName);
-		model += "const double pointless;\n";
-		api.loadParamModel(model);
-		api.setPropertiesFile(propertiesFName);
-
-		Iterator<List<RewardItem>> itemsIterator = rewardStrcutures.values().iterator();
-
-		while (itemsIterator.hasNext()) {
-			List<RewardItem> itemList = itemsIterator.next();
-			for (RewardItem i : itemList) {
-				if (i.isGuardAlwaysTrue()) {
-					continue;
-				}
-				List<String> vars = getArgumentsNames(i.getGuard());
-				String condition = i.getGuard();
-				// System.out.printf("{%s}, {%s}\n", Arrays.asList(vars.toArray()), condition);
-				List<String> statesList = api.findStatesSatisfyingExpression(condition, vars);
-				// System.out.printf("States: %s\n", Arrays.asList(statesList.toArray()));
-				if (statesList.size() <= 0) {
-					badItems.add(i);
-					continue;
-				}
-				for (String s : statesList) {
-					i.getStates().add(Integer.parseInt(s));
-				}
-			}
-		}
-		api.closeDown();
+		return sb.toString();
 	}
-	
-	
-	private void handleLabel(String line) {
-		// read chars after label to first equal sign for label
-		String str = line.replace("label \"", "");
-		String key = str.substring(0, str.lastIndexOf("\""));
-		str = line.substring(0, line.indexOf("=") + 1);
-		str = line.replace(str, "");
-		str = str.substring(0, str.length() - 1);
-		Label l = new Label(key, str, true);
-		labelList.add(l);
-	}
-	
-	
-	private List<String> getArgumentsNames(String expression) {
-		String strExp = expression;
-		// System.out.println("Expression: " + expression);
-		strExp = strExp.replaceAll("[()]", "");
-		strExp = strExp.replaceAll("  ", "");
-		String exp[] = strExp.split("(&|\\|)");
-		Pattern pattern = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*(<|<=|>|>=|!=|=)");
-		for (int i = 0; i < exp.length; i++) {
-			String s = exp[i];
-			Matcher m = pattern.matcher(s);
-			while (m.find()) {
-				s = m.group();
-			}
-			s = s.replaceAll(" ", "");
-			s = s.replace("<", "");
-			s = s.replace("<=", "");
-			s = s.replace(">", "");
-			s = s.replace(">=", "");
-			s = s.replace("!=", "");
-			s = s.replace("=", "");
-			exp[i] = s;
-		}
-		List<String> arguments = new ArrayList<String>();
-		for (String s : exp) {
-			if (!arguments.contains(s))
-				arguments.add(s);
-		}
-		return arguments;
-	}
-	
-	
-	public void prepareMap(Map<List<String>, String> options) throws Exception {	
-		String transitionMatrix = FileUtil.readFile(transitionMatrixFile);
-		Scanner scan = new Scanner(transitionMatrix);
+
+	public void prepareMap(Map<List<String>, String> options) throws Exception {
+		@SuppressWarnings("resource")
+		Scanner scan = new Scanner(traContent);
 		boolean summaryLine = true;
 		/// int inner;
 		List<String> visited = new ArrayList<String>();
@@ -471,12 +341,18 @@ public class MDPTransformation {
 		return sb.toString();
 	}
 
-	public String getEvoModelFile() {
-		return evoTemplateFileName;
+	public File toEvoCheckerTemplate(String evoContent) throws Exception {
+		String path = modelName;
+		evoTemplate = new File(path + ".pm");
+		FileWriter fw = new FileWriter(evoTemplate);
+		fw.write(evoContent);
+		fw.flush();
+		fw.close();
+		return evoTemplate;
 	}
-	
-	public String getEvoPropertiesFile() {
-		return evoPropertiesFileName;
+
+	public File getEvoTemplate() {
+		return evoTemplate;
 	}
 
 	private Map<String, List<RewardItem>> cachedItems = new HashMap<String, List<RewardItem>>();
@@ -528,15 +404,114 @@ public class MDPTransformation {
 		return returned;
 	}
 
-	
-	public void transformProperties(String mFile, String pFile) throws Exception {
+	private List<RewardItem> badItems = new ArrayList<RewardItem>();
+
+
+	private void buildRewardStructureAndStates() throws Exception {
+		// 1. Read all reward items in the original model and
+		// generate necessary structure
+		File m = new File(modelPath);
+		File newMFile = new File("./mFileParam.nm");
+		FileWriter copy = new FileWriter(newMFile);
+		BufferedReader br = new BufferedReader(new FileReader(m));
+		String line;
+		boolean injectDone = false;
+		while ((line = br.readLine()) != null) {
+			if (line.startsWith("//"))
+				continue;
+			if (line.startsWith("module ") && !injectDone) {
+				copy.write("const double pointless;\n");
+				injectDone = true;
+			}
+			copy.write(line + "\n");
+			String ss[] = line.split(" ");
+			if (ss != null && ss.length >= 1 && ss[0].equals("rewards")) {
+				// reward_content.append(String.format("rewards \"%s\"\n", str));
+				String reward_name = "all";
+				if (ss.length >= 2 && ss[1] != null) {
+					reward_name = ss[1].replaceAll("^\"|\"$", "");
+				}
+				// read all reward items in this reward structure
+				List<RewardItem> items = new ArrayList<RewardItem>();
+				String inline = br.readLine();
+				copy.write(inline + "\n");
+				while (!inline.equals("endrewards")) {
+					if ((!(inline.startsWith("//") || inline.startsWith("\t//"))) && inline.contains("[")
+							&& inline.contains("]")) {
+						// build a reward item
+						String label = inline.substring(inline.indexOf("[") + 1, inline.indexOf("]"));
+						String guard = inline.substring(inline.indexOf("]") + 1, inline.indexOf(":"));
+						String reward = inline.substring(inline.indexOf(":") + 1, inline.indexOf(";"));
+						RewardItem i = new RewardItem(label.trim(), guard.trim(), reward.trim(), reward_name);
+						items.add(i);
+					}
+					inline = br.readLine();
+					copy.write(inline + "\n");
+				}
+				// add all items to a reward structure
+				rewardStrcutures.put(reward_name, items);
+			}
+		}
+		br.close();
+		copy.close();
+
+		// 2. read the generate new model file with dummay parametic var and
+		// evaluate all reward items and obtain their satisfying states
+		PrismParamAPI api = new PrismParamAPI();
+		String model = PrismAPIUtilities.readModelFile(newMFile.getPath());
+		api.loadParamModel(model);
+		api.setPropertiesFile(propPath);
+
+		Iterator<List<RewardItem>> itemsIterator = rewardStrcutures.values().iterator();
+
+		while (itemsIterator.hasNext()) {
+			List<RewardItem> itemList = itemsIterator.next();
+			for (RewardItem i : itemList) {
+				if (i.isGuardAlwaysTrue()) {
+					continue;
+				}
+				List<String> vars = getArgumentsNames(i.getGuard());
+				String condition = i.getGuard();
+				// System.out.printf("{%s}, {%s}\n", Arrays.asList(vars.toArray()), condition);
+				List<String> statesList = api.findStatesSatisfyingExpression(condition, vars);
+				// System.out.printf("States: %s\n", Arrays.asList(statesList.toArray()));
+				if (statesList.size() <= 0) {
+					badItems.add(i);
+					continue;
+				}
+				for (String s : statesList) {
+					i.getStates().add(Integer.parseInt(s));
+				}
+			}
+		}
+		api.closeDown();
+	}
+
+	public void transformPropertyExpressions(String mFile, String pFile) throws Exception {
 
 		// Init PrismAPI
 		// Param could be the filename of the output (from Prism)
 		PrismParamAPI api = new PrismParamAPI();
-
-		String model = PrismAPIUtilities.readModelFile(mFile);
-		model += "\nconst double pointless;\n\n";
+		// Read and load model
+		// TODO: currently, the API need pointless parametric variable to be able to
+		// fetch the satisfying states using current PrismAPI
+		BufferedReader br = new BufferedReader(new FileReader(mFile));
+		String line;
+		File newMFile = new File("./mFileParam.nm");
+		newMFile.deleteOnExit();
+		FileWriter copy = new FileWriter(newMFile);
+		// copy content of old model and append pointless parametric variable
+		boolean injectDone = false;
+		while ((line = br.readLine()) != null) {
+			if (line.startsWith("module ") && !injectDone) {
+				copy.write("const double pointless;\n");
+				injectDone = true;
+			}
+			copy.write(line + "\n");
+		}
+		br.close();
+		copy.close();
+		String model = PrismAPIUtilities.readModelFile(newMFile.getPath());
 		api.loadParamModel(model);
 
 		// Set properties file
@@ -545,12 +520,12 @@ public class MDPTransformation {
 		// Get states info
 		// String s = api.getModelStatesInfo();
 
-		PCTLParser parser = new PCTLParser(labelList);
+		List<Label> l = new ArrayList<Label>();
+		PCTLParser parser = new PCTLParser(l);
 
-//		parser.readFileForLabels(mFile);
+		parser.readFileForLabels(mFile);
 
 		parser.readFileForLabels(pFile);
-//		handleLabel(pFile);
 
 		parser.parse(pFile);
 
@@ -615,14 +590,47 @@ public class MDPTransformation {
 
 		// write string build to a new property file
 		String ext = pFile.substring(pFile.lastIndexOf("."), pFile.length());
-		evoPropertiesFileName = basePath + File.separator + modelName+ "Evo"+ ext;
-		FileUtil.saveToFile(evoPropertiesFileName, sb + "\n\n", false);
-		System.out.println("EvoChecker properties created: " + evoPropertiesFileName);
-		 
+		String propsFileNew = pFile.substring(pFile.lastIndexOf("/") + 1, pFile.length()) + "_new_states";
+		propsFileNew = (propsFileNew.replace(ext, "")) + ext;
+		FileWriter fw = new FileWriter(propsFileNew);
+		fw.write(sb + "\n");
+		fw.close();
+		System.out.println("New property file: " + propsFileNew);
 		// Close down all API connections
 		api.closeDown();
 	}
-	
+
+	private List<String> getArgumentsNames(String expression) {
+
+		String strExp = expression;
+		// System.out.println("Expression: " + expression);
+		strExp = strExp.replaceAll("[()]", "");
+		strExp = strExp.replaceAll("  ", "");
+		String exp[] = strExp.split("(&|\\|)");
+		Pattern pattern = Pattern.compile("[a-zA-Z_$][a-zA-Z_$0-9]*(<|<=|>|>=|!=|=)");
+		for (int i = 0; i < exp.length; i++) {
+			String s = exp[i];
+			Matcher m = pattern.matcher(s);
+			while (m.find()) {
+				s = m.group();
+			}
+			s = s.replaceAll(" ", "");
+			s = s.replace("<", "");
+			s = s.replace("<=", "");
+			s = s.replace(">", "");
+			s = s.replace(">=", "");
+			s = s.replace("!=", "");
+			s = s.replace("=", "");
+			exp[i] = s;
+		}
+		List<String> arguments = new ArrayList<String>();
+		for (String s : exp) {
+			if (!arguments.contains(s))
+				arguments.add(s);
+		}
+		return arguments;
+	}
+
 	private String encodeStatesToString(List<Integer> states) {
 		// replace the condition with states
 		int s;

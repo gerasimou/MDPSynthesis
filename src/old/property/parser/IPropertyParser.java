@@ -1,9 +1,9 @@
-package property.parser;
+package old.property.parser;
 
 import java.util.List;
 
-import property.Label;
-import property.Property;
+import old.property.Label;
+import old.property.Property;
 
 public interface IPropertyParser {
 

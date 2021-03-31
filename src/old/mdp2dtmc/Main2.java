@@ -1,4 +1,4 @@
-package mdp2dtmc;
+package old.mdp2dtmc;
 
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 import org.spg.PrismAPI.PrismParamAPI;
 import org.spg.utils.PrismAPIUtilities;
 
-import property.Label;
-import property.Objective;
-import property.Property;
-import property.parser.PCTLParser;
+import old.property.Label;
+import old.property.Objective;
+import old.property.Property;
+import old.property.parser.PCTLParser;
 
 public class Main2 {
 

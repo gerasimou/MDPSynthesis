@@ -1,4 +1,4 @@
-package property.parser;
+package old.property.parser;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,10 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import property.Constraint;
-import property.Label;
-import property.Objective;
-import property.Property;
+import old.property.Constraint;
+import old.property.Label;
+import old.property.Objective;
+import old.property.Property;
 
 public class PCTLParser implements IPropertyParser {
 
