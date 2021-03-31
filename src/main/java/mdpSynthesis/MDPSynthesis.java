@@ -9,14 +9,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.spg.PrismAPI.PrismAPI;
-import org.spg.PrismAPI.PrismParamAPI;
-import org.spg.utils.PrismAPIUtilities;
 
+import evochecker.evolvables.Evolvable;
+import evochecker.evolvables.EvolvableInteger;
+import evochecker.genetic.genes.AbstractGene;
 import explicit.MDPSparse;
 import explicit.Model;
 import parser.EvaluateContextValues;
 import parser.State;
 import parser.Values;
+import parser.ast.ConstantList;
 import parser.ast.Expression;
 import parser.ast.ExpressionConstant;
 import parser.ast.ExpressionLiteral;
@@ -51,6 +53,10 @@ public class MDPSynthesis {
 	ModulesFile modules = null;
 
 	
+	public List<Evolvable> evolvables = null;
+	public String internalModelRepresentation = null;
+	
+	
 	public MDPSynthesis (String modelFile, String propertiesFile) {
 		this.modelFName 		= modelFile;
 		this.propertiesFName	= propertiesFile;
@@ -61,49 +67,17 @@ public class MDPSynthesis {
 		
 		evoTemplateFileName 	= basePath + File.separator + modelName+ "Evo.pm";
 		evoPropertiesFileName 	= basePath + File.separator + modelName+ "Evo.pctl";
-		
-		buildModel();
-		
+				
 		optionsMap = new HashMap<>();
 //		labelList = new ArrayList<>();
 	}
-	
-	/**
-	 * Get the transition matrix of specified modelFile and propertiesFile
-	 */
-	private void buildModel() {
-		try {
-			PrismAPI api = new PrismAPI(basePath + File.separator + modelName +".log");
-			api.parseModelAndPropertiesFiles(modelFName, propertiesFName);
-			prism = api.getPrism();
-			
-			prism.setEngine(Prism.EXPLICIT);
-			modules = prism.parseModelString(FileUtil.readFile(modelFName));
-			modules.setUndefinedConstants(null);
-			prism.loadPRISMModel(modules);
-			prism.buildModel();
-			
-//			PrismParamAPI api = new PrismParamAPI(basePath + File.separator + modelName +".log");
-//			String model = PrismAPIUtilities.readModelFile(modelFName);
-//			api.loadParamModel(model);
-//			prism = api.getPrism();
-//			
-//			prism.setEngine(Prism.EXPLICIT);
-//			modules = api.getMofulesFile();;
-//			api.setPropertiesFile(propertiesFName);
-////			prism.parseModelString(FileUtil.readFile(modelFName));
-////			modules.setUndefinedConstants(null);
-////			prism.loadPRISMModel(modules);
-//			prism.buildModel();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-	}
+
 	
 	public void run() {
 		System.out.println("Creating EvoChecker template...");
+		//building Prism model
+		buildModel();
+		
 		Model model = prism.getBuiltModelExplicit();
 //		MDPSparse mdpModel = null;
 		if (model instanceof MDPSparse)
@@ -131,6 +105,46 @@ public class MDPSynthesis {
 	}
 	
 	
+	/**
+	 * Build the model
+	 */
+	private void buildModel() {
+		try {
+			PrismAPI api = new PrismAPI(basePath + File.separator + modelName +".log");
+			api.parseModelAndPropertiesFiles(modelFName, propertiesFName);
+			prism = api.getPrism();
+			
+			prism.setEngine(Prism.EXPLICIT);
+			modules = prism.parseModelString(FileUtil.readFile(modelFName));
+			Values v = new Values();
+			for (String constantName : modules.getUndefinedConstants()) {
+				v.setValue(constantName, 0.01);
+			}
+			modules.setUndefinedConstants(v);
+//			modules.setUndefinedConstants(null);
+			prism.loadPRISMModel(modules);
+			prism.buildModel();
+			
+//			PrismParamAPI api = new PrismParamAPI(basePath + File.separator + modelName +".log");
+//			String model = PrismAPIUtilities.readModelFile(modelFName);
+//			api.loadParamModel(model);
+//			prism = api.getPrism();
+//			
+//			prism.setEngine(Prism.EXPLICIT);
+//			modules = api.getMofulesFile();;
+//			api.setPropertiesFile(propertiesFName);
+////			prism.parseModelString(FileUtil.readFile(modelFName));
+////			modules.setUndefinedConstants(null);
+////			prism.loadPRISMModel(modules);
+//			prism.buildModel();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+	
+	
 	private StringBuilder manageRewardStructures(ModulesFile modulesFile, MDPSparse model) throws PrismLangException {
 		StringBuilder sb = new StringBuilder("\n\n");
 		RewardStructureVisitor rewardVisitor = new RewardStructureVisitor();
@@ -141,10 +155,25 @@ public class MDPSynthesis {
 		}
 		
 		//append constants just in case they are used in rewards
-		sb.append("\n " + modules.getConstantList().toString());
+		ConstantList constantsList = modules.getConstantList();
+		String s = "";
+		int size=constantsList.size();
 		
+		for (int i = 0; i<size; i++) {
+			String constName = constantsList.getConstantName(i);
+			if (constantsList.isDefinedConstant(constName)) {
+				s += "const ";
+				s += constantsList.getConstantType(i).getTypeString() + " ";
+				s += constName; 
+				s += " = " + constantsList.getConstant(i) + ";\n";
+			}
+		}
+				
+		sb.append("\n " + s);
+//		sb.append("\n " + modules.getConstantList().toString());
 		return sb;
 	}
+	
 	
 	private StringBuilder flattenMDP(MDPSparse mdpModel) {
 		StringBuilder sb = new StringBuilder("dtmc\n\n");
@@ -249,6 +278,47 @@ public class MDPSynthesis {
 	}
 	
 	
+	public void runEvolvables() {
+		System.out.println("Creating EvoChecker template...");
+		
+		//building Prism model
+		buildModel();
+		
+		Model model = prism.getBuiltModelExplicit();
+//		MDPSparse mdpModel = null;
+		if (model instanceof MDPSparse)
+			mdpModel = (MDPSparse) model;
+		ModulesFile modulesFile = prism.getPRISMModel();
+		
+		try {
+			StringBuilder sb1 = flattenMDP(mdpModel);
+			StringBuilder sb3 = manageRewardStructures(modulesFile, (MDPSparse)model);
+			sb1.append(sb3);
+			
+			internalModelRepresentation = sb1.toString();
+			constructEvolvableList();
+			
+			System.out.println("EvoChecker template created: " + evoTemplateFileName);
+	
+			manageProperties(mdpModel, modulesFile);
+		}
+		catch (PrismLangException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("DONE");
+	}
+	
+	
+	private void constructEvolvableList(){
+		evolvables= new ArrayList<>();
+		for (Map.Entry<Integer, Integer> e : optionsMap.entrySet()) {
+			EvolvableInteger ev = new EvolvableInteger(EVOVAR + e.getKey(), 0, e.getValue(), true);
+			evolvables.add(ev);
+		}
+	}
+	
+	
 	private void manageProperties(MDPSparse mdpModel, ModulesFile modulesFile) {
 		try {
 			PropertiesVisitor propVisitor = new PropertiesVisitor(mdpModel, modulesFile);
@@ -278,6 +348,7 @@ public class MDPSynthesis {
 	public String getEvoModelFile() {
 		return evoTemplateFileName;
 	}
+	
 	
 	public String getEvoPropertiesFile() {
 		return evoPropertiesFileName;
@@ -358,4 +429,6 @@ public class MDPSynthesis {
 		
 	}
 
+	
+	
 }

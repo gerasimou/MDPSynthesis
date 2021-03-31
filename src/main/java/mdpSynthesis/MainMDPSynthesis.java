@@ -6,6 +6,7 @@ import java.util.List;
 import org.spg.PrismAPI.PrismAPI;
 
 import evochecker.EvoChecker;
+import evochecker.EvoCheckerMDP;
 import evochecker.auxiliary.Constants;
 import evochecker.plotting.PlotFactory;
 import prism.Point;
@@ -13,44 +14,51 @@ import utilities.FileUtil;
 
 public class MainMDPSynthesis {
 	public static void main(String[] args) {
-
+		run();
+	}
+	
+	
+	private static  void run() {
 		 //Simple Model
 		 String problem = "simple";		
 		 //DPM Model
 		 problem = "dpm";
 		 //CSMA Model
-		 problem = "csma";
+//		 problem = "csma";
 //		 //WLAN Model
-		 problem = "wlan";
+//		 problem = "wlan";
 //		 //Zeroconf Model
-		 problem = "zeroconf";
+//		 problem = "zeroconf";
 		 //Javier's models
 		 problem = "ow";
 		 //Consensus
 //		 problem = "consensus";
 //		 //DPM
 //		 problem = "dpm";
-//		 //Scheduler
+//		 //Scheduler - WORKS BUT TAKES A LONG TIME
 //		 problem = "scheduler";
 //		 //Team
 //		 problem = "team";
 		 //FX
 //		 problem = "fx";
 		 
-		 String model = "inputs/" + problem +"/"+ problem +"3.pm";
-		 String prop  = "inputs/" + problem +"/"+ problem +".pctl";
+		 String model = "models/" + problem +"Old/"+ problem +"3.pm";
+		 String prop  = "models/" + problem +"Old/"+ problem +".pctl";
 		 
 
 		
 		MDPSynthesis transformer = new MDPSynthesis(model, prop);
-		transformer.run();
+//		transformer.run();
+		//1) Create EvoChecker instance
+//		EvoChecker ec = new EvoChecker();
+		
+		transformer.runEvolvables();
+		//1) Create EvoChecker instance
+		EvoChecker ec = new EvoCheckerMDP(transformer.internalModelRepresentation, transformer.evolvables);
+	
 		
 		String evoModel 	 = transformer.getEvoModelFile();
 		String evoProperties = transformer.getEvoPropertiesFile();
-				
-		
-		//1) Create EvoChecker instance
-		EvoChecker ec = new EvoChecker();
 		
 		//2) Set configuration file
 		String configFile ="config.properties"; 
@@ -59,12 +67,17 @@ public class MainMDPSynthesis {
 		ec.setProperty(Constants.PLOT_PARETO_FRONT, "false");
 		ec.setProperty(Constants.PYTHON3_DIRECTORY, "/Users/sgerasimou/anaconda3/bin/python3");
 		ec.setProperty(Constants.VERBOSE, "true");
-		ec.setProperty(Constants.POPULATION_SIZE_KEYWORD, "40");
-		ec.setProperty(Constants.MAX_EVALUATIONS_KEYWORD, "200");
 		ec.setProperty(Constants.MODEL_FILE_KEYWORD, evoModel);
 		ec.setProperty(Constants.PROPERTIES_FILE_KEYWORD, evoProperties);
 		ec.setProperty(Constants.PROBLEM_KEYWORD, problem);
 		ec.setProperty(Constants.PROCESSORS_KEYWORD, "1");
+		ec.setProperty(Constants.DOUBLE_PRECISION, "12");
+
+		//
+		ec.setProperty(Constants.POPULATION_SIZE_KEYWORD, "20");
+		ec.setProperty(Constants.MAX_EVALUATIONS_KEYWORD, "200");
+		ec.setProperty(Constants.INTEGER_MUTATION_PROBABILITY, "0.9");
+		ec.setProperty("MUTATION_OPERATOR", "PolynomialUniformAll");
 
 		
 		//3) Start EvoChecker
@@ -94,7 +107,7 @@ public class MainMDPSynthesis {
 				 }
 			 }
 		 }
-		 catch (Exception e) {
+		 catch (Exception | Error e) {
 			 e.printStackTrace();
 		 }
 		 
@@ -121,14 +134,6 @@ public class MainMDPSynthesis {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		 
-
-		 
-//		 String[] cmd = new String[]{model,  prop};
-//		 PrismCL.main(cmd);
-//		 new PrismCL().go(cmd);
-//		 System.exit(0);
-
 	}
 
 }
