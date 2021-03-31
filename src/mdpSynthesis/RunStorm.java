@@ -35,7 +35,7 @@ public class RunStorm {
 				for (String pareto : paretoFront) {
 					if (pareto.isBlank())
 						break;
-					String points[] = pareto.trim().replaceAll("(\\(|\\)|,)", "").strip().split(" ");
+					String points[] = pareto.trim().strip().replaceAll("(\\(|\\)|\\s+)", "").split(",");//replaceAll(" ", "").
 					stormOutput.append(String.join("\t", points) +"\n");
 				}
 	//			System.out.println(stormOutput.toString());
