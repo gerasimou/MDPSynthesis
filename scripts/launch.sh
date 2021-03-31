@@ -35,7 +35,7 @@ esac
 
 echo $DYLD_LIBRARY_PATH
 
-JAR=EvoChecker-1.1.0.jar
+JAR=MDPSynthesis-1.0.0.jar
 
 vmArgs="-Xmx3g -XX:ParallelGCThreads=1"
 java $vmArgs -jar $JAR
