@@ -1,5 +1,0 @@
-//OBJECTIVE, MIN
-R{"power"}min=? [ C<=100 ]
-
-//OBJECTIVE, MIN
-R{"lost"}min=? [ C<=100 ]

@@ -1,0 +1,17 @@
+PRISM
+=====
+
+Version: 4.5.dev
+Date: Tue Mar 30 19:16:09 BST 2021
+Hostname: Simoss-MacBook-Pro.local
+Memory limits: cudd=1g, java(heap)=8g
+
+Type:        DTMC
+Modules:     M 
+Variables:   x 
+
+---------------------------------------------------------------------
+
+Building model...
+
+Computing reachable states...

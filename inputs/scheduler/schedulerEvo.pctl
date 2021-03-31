@@ -1,5 +1,0 @@
-//OBJECTIVE, MIN
-R{"energy"}min=? [ C ]
-
-//OBJECTIVE, MIN
-R{"time"}min=? [ C ]

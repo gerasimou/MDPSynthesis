@@ -1,0 +1,11 @@
+//const int C1;
+
+//multi(R{"SV"}max=? [ C ], R{"EC"}min=? [ C ])
+//multi(R{"EC"}min=? [ C ], Pmax=? [ F s=DONE_DUMPING])
+
+//R{"EC"}<=500 [ C ]
+
+multi(R{"EC"}min=? [ C ], R{"SV"}max=? [ C ])
+
+//multi(R{"T"}min=? [ C ], R{"EC"}min=? [ C ])
+

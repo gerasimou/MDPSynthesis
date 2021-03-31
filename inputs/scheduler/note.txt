@@ -1,2 +1,0 @@
-Neither Storm or Prism, nor EvoChecker work on this
-EvoChecker gives StackOverflow
