@@ -1,0 +1,29 @@
+PRISM
+=====
+
+Version: 4.5.dev
+Date: Fri Apr 09 17:21:14 BST 2021
+Hostname: Simoss-MacBook-Pro.local
+Memory limits: cudd=1g, java(heap)=8g
+
+Type:        MDP
+Modules:     reconf TASWorkflow MS1 MS2 MS3 MS4 MS5 DS1 AS1 AS2 AS3 
+Variables:   MS1_selected MS2_selected MS3_selected MS4_selected MS5_selected DS1_selected AS1_selected AS2_selected AS3_selected task analysisResult MSInvoked DInvoked AInvoked workflowOK workflowDone timeouts MS1_serviceOK MS1_ready MS2_serviceOK MS2_ready MS3_serviceOK MS3_ready MS4_serviceOK MS4_ready MS5_serviceOK MS5_ready DS1_serviceOK DS1_ready AS1_serviceOK AS1_ready AS2_serviceOK AS2_ready AS3_serviceOK AS3_ready 
+
+---------------------------------------------------------------------
+
+Building model...
+
+Computing reachable states... 18520 states
+Reachable states exploration and model construction done in 2.633 secs.
+Sorting reachable states list...
+
+Time for model construction: 2.839 seconds.
+
+Warning: Deadlocks detected and fixed in 20 states
+
+Type:        MDP
+States:      18520 (1 initial)
+Transitions: 93848
+Choices:     88417
+Max/avg:     10/4.77

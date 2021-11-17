@@ -1,5 +1,5 @@
 //OBJECTIVE,MIN
-R{"power"}=? [ C<=100 ]
+R{"power"}=? [ C ]
 
 //OBJECTIVE,MIN
-R{"lost"}=? [ C<=100 ]
+R{"lost"}=? [ C ]

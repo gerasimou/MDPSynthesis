@@ -5,7 +5,12 @@
 
 //R{"EC"}<=500 [ C ]
 
-multi(R{"EC"}min=? [ C ], R{"SV"}max=? [ C ])
-
 //multi(R{"T"}min=? [ C ], R{"EC"}min=? [ C ])
 
+
+//multi(R{"EC"}min=? [ C ], Pmax=? [ F s=2])
+
+//multi(R{"EC"}min=? [ C ], R{"SV"}max=? [ C ], Pmax=? [ F s=2], R{"T"}<30 [ C ])
+
+
+multi(R{"EC"}min=? [ C ], R{"SV"}max=? [ C ], Pmax=? [ F s=2], R{"T"}<30 [ C ])

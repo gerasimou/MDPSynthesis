@@ -83,24 +83,6 @@ module M
 	[]	x=48->1.000000:(x'=48);
 endmodule
 
-evolve int o0 [0..2];
-evolve int o1 [0..1];
-evolve int o5 [0..1];
-evolve int o9 [0..1];
-evolve int o13 [0..2];
-evolve int o14 [0..2];
-evolve int o15 [0..2];
-evolve int o16 [0..2];
-evolve int o17 [0..2];
-evolve int o18 [0..2];
-evolve int o19 [0..2];
-evolve int o20 [0..2];
-evolve int o21 [0..2];
-evolve int o22 [0..2];
-evolve int o23 [0..2];
-evolve int o24 [0..2];
-
-
 
 
 rewards "SV" 
@@ -147,4 +129,22 @@ const int FAILED = 100;
 const double ex_loc1 = 0.997893946649;
 const double ex_loc2 = 0.554612805945;
 const double ex_loc3 = 0.278459967659;
+evolve int o0 [0..2];
+evolve int o1 [0..1];
+evolve int o5 [0..1];
+evolve int o9 [0..1];
+evolve int o13 [0..2];
+evolve int o14 [0..2];
+evolve int o15 [0..2];
+evolve int o16 [0..2];
+evolve int o17 [0..2];
+evolve int o18 [0..2];
+evolve int o19 [0..2];
+evolve int o20 [0..2];
+evolve int o21 [0..2];
+evolve int o22 [0..2];
+evolve int o23 [0..2];
+evolve int o24 [0..2];
+
+
 

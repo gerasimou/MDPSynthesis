@@ -1,0 +1,5 @@
+//OBJECTIVE,MIN
+R{"cost"}=? [ C ]
+
+//OBJECTIVE,MIN
+R{"time"}=? [ C ]

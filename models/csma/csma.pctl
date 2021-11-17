@@ -7,6 +7,6 @@
 //R{"time"}min=? [ F s1=4&s2=4&s3=4 ];
 
 
-multi(R{"time"}min=?[F "all_delivered"], Pmax=? [!"collision_max_backoff" U "all_delivered"])
-//multi(R{"time"}min=? [ F s1=4&s2=4&s3=4], Pmin=? [! ((cd1=K & s1=1 & b=2)|(cd2=K & s2=1 & b=2)|(cd3=K & s3=1 & b=2)) U s1=4&s2=4&s3=4])
+//multi(R{"time"}min=?[F "all_delivered"], Pmax=? [!"collision_max_backoff" U "all_delivered"])
+multi(R{"time"}min=? [ F s1=4&s2=4&s3=4], Pmin=? [! ((cd1=K & s1=1 & b=2)|(cd2=K & s2=1 & b=2)|(cd3=K & s3=1 & b=2)) U s1=4&s2=4&s3=4])
 //multi(R{"time"}min=? [ F s1=4&s2=4&s3=4], Pmax=? [ F min_backoff_after_success<K ]) 

@@ -253,57 +253,6 @@ module M
 	[]	x=128->1.000000:(x'=128);
 endmodule
 
-evolve int o0 [0..3];
-evolve int o1 [0..2];
-evolve int o2 [0..1];
-evolve int o3 [0..1];
-evolve int o5 [0..1];
-evolve int o9 [0..2];
-evolve int o10 [0..1];
-evolve int o11 [0..1];
-evolve int o13 [0..1];
-evolve int o17 [0..2];
-evolve int o18 [0..1];
-evolve int o19 [0..1];
-evolve int o21 [0..1];
-evolve int o25 [0..2];
-evolve int o26 [0..1];
-evolve int o27 [0..1];
-evolve int o29 [0..1];
-evolve int o33 [0..3];
-evolve int o34 [0..3];
-evolve int o35 [0..3];
-evolve int o36 [0..3];
-evolve int o37 [0..3];
-evolve int o38 [0..3];
-evolve int o39 [0..3];
-evolve int o40 [0..3];
-evolve int o41 [0..3];
-evolve int o42 [0..3];
-evolve int o43 [0..3];
-evolve int o44 [0..3];
-evolve int o45 [0..3];
-evolve int o46 [0..3];
-evolve int o47 [0..3];
-evolve int o48 [0..3];
-evolve int o49 [0..3];
-evolve int o50 [0..3];
-evolve int o51 [0..3];
-evolve int o52 [0..3];
-evolve int o53 [0..3];
-evolve int o54 [0..3];
-evolve int o55 [0..3];
-evolve int o56 [0..3];
-evolve int o57 [0..3];
-evolve int o58 [0..3];
-evolve int o59 [0..3];
-evolve int o60 [0..3];
-evolve int o61 [0..3];
-evolve int o62 [0..3];
-evolve int o63 [0..3];
-evolve int o64 [0..3];
-
-
 
 
 rewards "SV" 
@@ -367,4 +316,55 @@ const double ex_loc1 = 0.0547293044461;
 const double ex_loc2 = 0.0985725423885;
 const double ex_loc3 = 0.969410016966;
 const double ex_loc4 = 0.974554139007;
+evolve int o0 [0..3];
+evolve int o1 [0..2];
+evolve int o2 [0..1];
+evolve int o3 [0..1];
+evolve int o5 [0..1];
+evolve int o9 [0..2];
+evolve int o10 [0..1];
+evolve int o11 [0..1];
+evolve int o13 [0..1];
+evolve int o17 [0..2];
+evolve int o18 [0..1];
+evolve int o19 [0..1];
+evolve int o21 [0..1];
+evolve int o25 [0..2];
+evolve int o26 [0..1];
+evolve int o27 [0..1];
+evolve int o29 [0..1];
+evolve int o33 [0..3];
+evolve int o34 [0..3];
+evolve int o35 [0..3];
+evolve int o36 [0..3];
+evolve int o37 [0..3];
+evolve int o38 [0..3];
+evolve int o39 [0..3];
+evolve int o40 [0..3];
+evolve int o41 [0..3];
+evolve int o42 [0..3];
+evolve int o43 [0..3];
+evolve int o44 [0..3];
+evolve int o45 [0..3];
+evolve int o46 [0..3];
+evolve int o47 [0..3];
+evolve int o48 [0..3];
+evolve int o49 [0..3];
+evolve int o50 [0..3];
+evolve int o51 [0..3];
+evolve int o52 [0..3];
+evolve int o53 [0..3];
+evolve int o54 [0..3];
+evolve int o55 [0..3];
+evolve int o56 [0..3];
+evolve int o57 [0..3];
+evolve int o58 [0..3];
+evolve int o59 [0..3];
+evolve int o60 [0..3];
+evolve int o61 [0..3];
+evolve int o62 [0..3];
+evolve int o63 [0..3];
+evolve int o64 [0..3];
+
+
 

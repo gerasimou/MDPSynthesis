@@ -1,0 +1,9 @@
+//const int C1;
+
+//multi(Pmax=? [ F workflowOK=true ], R{"time"}min=? [ C ])
+
+//multi(Pmax=? [ F workflowOK=true ], R{"cost"}min=? [ C ])
+
+//multi(R{"time"}min=? [ C ], R{"cost"}min=? [ C ])
+
+multi(R{"cost"}min=? [ C ], R{"time"}min=? [ C ])//, P>0.99 [ F workflowOK=true ])

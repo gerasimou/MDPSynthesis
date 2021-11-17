@@ -77,23 +77,6 @@ module M
 	[]	x=38->1.000000:(x'=38);
 endmodule
 
-evolve int o0 [0..2];
-evolve int o4 [0..2];
-evolve int o5 [0..3];
-evolve int o6 [0..2];
-evolve int o7 [0..3];
-evolve int o8 [0..2];
-evolve int o9 [0..3];
-evolve int o10 [0..2];
-evolve int o11 [0..2];
-evolve int o12 [0..2];
-evolve int o13 [0..2];
-evolve int o14 [0..2];
-evolve int o15 [0..2];
-evolve int o16 [0..2];
-evolve int o17 [0..2];
-
-
 
 
 rewards "SV" 
@@ -160,4 +143,21 @@ const int MAX_TRIED = 1;
 const double ex_loc1 = 0.997893946649;
 const double ex_loc2 = 0.554612805945;
 const double ex_loc3 = 0.278459967659;
+evolve int o0 [0..2];
+evolve int o4 [0..2];
+evolve int o5 [0..3];
+evolve int o6 [0..2];
+evolve int o7 [0..3];
+evolve int o8 [0..2];
+evolve int o9 [0..3];
+evolve int o10 [0..2];
+evolve int o11 [0..2];
+evolve int o12 [0..2];
+evolve int o13 [0..2];
+evolve int o14 [0..2];
+evolve int o15 [0..2];
+evolve int o16 [0..2];
+evolve int o17 [0..2];
+
+
 

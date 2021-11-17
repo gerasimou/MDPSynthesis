@@ -38461,6 +38461,20 @@ module M
 	[cd]	x=36849->1.000000:(x'=2497);
 endmodule
 
+
+
+rewards "time" 
+	[time] true : 1;
+
+endrewards
+
+
+ const int sigma = 1;
+const int lambda = 30;
+const int N = 2;
+const int K = 2;
+const int slot = 2*sigma;
+const int M = floor(pow(2, K))-1;
 evolve int o0 [0..2];
 evolve int o1 [0..2];
 evolve int o2 [0..1];
@@ -40016,18 +40030,4 @@ evolve int o4090 [0..1];
 evolve int o28670 [0..1];
 
 
-
-
-rewards "time" 
-	[time] true : 1;
-
-endrewards
-
-
- const int sigma = 1;
-const int lambda = 30;
-const int N = 3;
-const int K = 2;
-const int slot = 2*sigma;
-const int M = floor(pow(2, K))-1;
 

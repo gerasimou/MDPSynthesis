@@ -1,0 +1,3 @@
+"pareto3": multi(Pmax=? [ F task1_completed ], Pmax=? [ F task2_completed ])
+
+//, R{"w_1_total"}max=? [ F true ]

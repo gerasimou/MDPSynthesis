@@ -2,7 +2,7 @@ PRISM
 =====
 
 Version: 4.5.dev
-Date: Tue Mar 30 22:52:17 BST 2021
+Date: Thu Apr 01 01:00:24 BST 2021
 Hostname: Simoss-MacBook-Pro.local
 Memory limits: cudd=1g, java(heap)=8g
 
@@ -15,10 +15,10 @@ Variables:   c pm sr sp q
 Building model...
 
 Computing reachable states... 636 states
-Reachable states exploration and model construction done in 0.124 secs.
+Reachable states exploration and model construction done in 0.153 secs.
 Sorting reachable states list...
 
-Time for model construction: 0.167 seconds.
+Time for model construction: 0.206 seconds.
 
 Type:        MDP
 States:      636 (1 initial)
