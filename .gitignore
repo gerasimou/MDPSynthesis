@@ -13,4 +13,5 @@ output_Prism.txt
 hs_err_pid*
 /target/
 
-libs
+data/
+Server/
