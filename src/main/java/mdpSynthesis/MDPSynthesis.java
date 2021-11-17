@@ -12,7 +12,7 @@ import org.spg.PrismAPI.PrismAPI;
 
 import evochecker.evolvables.Evolvable;
 import evochecker.evolvables.EvolvableInteger;
-import evochecker.genetic.genes.AbstractGene;
+import evochecker.evolvables.EvolvableIntegerMDP;
 import explicit.MDPSparse;
 import explicit.Model;
 import parser.EvaluateContextValues;
@@ -298,8 +298,14 @@ public class MDPSynthesis {
 			internalModelRepresentation = sb1.toString();
 			constructEvolvableList();
 			
+
+			StringBuilder sb2 = constructEvolveOptions();
+			sb1.append(sb2);
+
+			//Save EvoChecker template to file
+			FileUtil.saveToFile(evoTemplateFileName, sb1.toString(), false);
 			System.out.println("EvoChecker template created: " + evoTemplateFileName);
-	
+				
 			manageProperties(mdpModel, modulesFile);
 		}
 		catch (PrismLangException e) {
@@ -353,6 +359,112 @@ public class MDPSynthesis {
 	public String getEvoPropertiesFile() {
 		return evoPropertiesFileName;
 	}
+	
+	
+	
+	
+	//For shortening the generated file
+	private StringBuilder flattenMDPShort(MDPSparse mdpModel) {
+		StringBuilder sb = new StringBuilder("dtmc\n\n");
+		
+		int i, j, numChoices, numStates;
+		boolean first;
+		Object action;
+		
+		//Get information about the model
+//		totalChoices 	= mdpModel.getNumChoices();
+		numStates 		= mdpModel.getNumStates();
+//		numTransitions	= mdpModel.getNumTransitions();		
+		
+		evolvables = new ArrayList<Evolvable>();
+		
+		sb.append("module M\n\tx : [0.." + (numStates - 1) + "];\n\n");
+		for (i=0; i<numStates; i++) {
+			numChoices = mdpModel.getNumChoices(i);
+			
+			//if numChoices = 1 -> there is no non-determinism
+			//=> export a normal probabilistic transition
+			if (numChoices == 1) {
+				action = mdpModel.getAction(i, 0);
+				sb.append(action != null ? ("\t[" + action + "]") : "\t[]");
+				sb.append("\tx=" + i + "->");
+				first = true;
+				Iterator<Map.Entry<Integer, Double>> iter = mdpModel.getTransitionsIterator(i, 0);
+				while (iter.hasNext()) {
+					if (first)
+						first = false;
+					else
+						sb.append("+");
+					Map.Entry<Integer, Double> e = iter.next();
+					// Note use of PrismUtils.formatDouble to match PRISM-exported files
+//					sb.append(PrismUtils.formatDouble(e.getValue()) + ":(x'=" + e.getKey() + ")");
+					sb.append(String.format("%.06f", e.getValue()) + ":(x'=" + e.getKey() + ")");
+				}
+				sb.append(";\n");
+			}
+			else {
+				Map<Integer, String> commands = new HashMap<Integer, String>();
+				for (j=0; j<numChoices; j++) {
+					String cmd = "";
+					action = mdpModel.getAction(i, j);
+					cmd = action != null ? ("\t[" + action + "]") : "\t[]";
+					cmd += "\tx="+ i + "->";
+					first = true;
+					Iterator<Map.Entry<Integer, Double>> iter = mdpModel.getTransitionsIterator(i, j);
+					while (iter.hasNext()) {
+						if (first)
+							first = false;
+						else
+							cmd += "+";
+						Map.Entry<Integer, Double> e = iter.next();
+						// Note use of PrismUtils.formatDouble to match PRISM-exported files
+						cmd += PrismUtils.formatDouble(e.getValue()) + ":(x'=" + e.getKey() + ")";
+					}
+					cmd += ";\n";
+					commands.put(j, cmd);
+				}
+				
+				evolvables.add(new EvolvableIntegerMDP("x"+i, numChoices-1, commands));
+			}
+		}
+//		sb.append("endmodule\n\n");
+		
+		return sb;
+	}
+	
+	
+	
+	public void runEvolvablesShort() {
+		System.out.println("Creating EvoChecker template...");
+		
+		//building Prism model
+		buildModel();
+		
+		Model model = prism.getBuiltModelExplicit();
+//		MDPSparse mdpModel = null;
+		if (model instanceof MDPSparse)
+			mdpModel = (MDPSparse) model;
+		ModulesFile modulesFile = prism.getPRISMModel();
+		
+		try {
+			StringBuilder sb1 = manageRewardStructures(modulesFile, (MDPSparse)model);
+			StringBuilder sb3 = flattenMDPShort(mdpModel);
+			sb1.append(sb3);
+			
+			internalModelRepresentation = sb1.toString();
+			
+			//Save EvoChecker template to file
+			FileUtil.saveToFile(evoTemplateFileName, sb1.toString(), false);
+			System.out.println("EvoChecker template created: " + evoTemplateFileName);
+				
+			manageProperties(mdpModel, modulesFile);
+		}
+		catch (PrismLangException e) {
+			e.printStackTrace();
+		}
+		System.out.println("DONE");
+	}
+	
 	
 	
 	public class RewardStructureVisitor extends ASTTraverse{

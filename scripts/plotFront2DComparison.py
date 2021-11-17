@@ -27,10 +27,14 @@ storm = storm.astype(new_dtypes)
 plt.scatter(evo.iloc[:,0], evo.iloc[:,1], c="r", label='Evo')# s=area, c=colors, alpha=0.5)
 plt.scatter(prism.iloc[:,0], prism.iloc[:,1], c="b", marker='x', label='Prism')# s=area, c=colors, alpha=0.5)
 plt.scatter(storm.iloc[:,0], storm.iloc[:,1], c="g", marker='.', label='Storm')# s=area, c=colors, alpha=0.5)
-plt.xlabel(f.columns[0], fontsize=14)
-plt.ylabel(f.columns[1], fontsize=14)
-plt.title(title, fontsize=16)
+plt.xlabel(f.columns[0], fontsize=22)
+plt.ylabel(f.columns[1], fontsize=22)
+#plt.title(title, fontsize=16)
 plt.legend()
 
-plt.savefig(title)
+plt.yticks(fontsize=16)
+plt.xticks(fontsize=16)
+
+
+plt.savefig(title+".pdf", bbox_inches='tight', pad_inches=0)
 plt.show()

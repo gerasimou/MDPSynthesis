@@ -1,21 +1,15 @@
 package evochecker.language.parser;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-import evochecker.auxiliary.Constants;
-import evochecker.auxiliary.FileUtil;
-import evochecker.auxiliary.Utility;
 import evochecker.evolvables.Evolvable;
 import evochecker.exception.EvoCheckerException;
-import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
 import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
-import mdpSynthesis.MDPSynthesis;
 
 public class ModelInstantiatorMDP extends ModelInstantiator{// Parametric {
 	
@@ -61,6 +55,7 @@ public class ModelInstantiatorMDP extends ModelInstantiator{// Parametric {
 				concreteModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
 			}	
 		}
+//		concreteModel.append("\n endmodule \n\n");
 //		System.out.println(concreteModel);
 		return concreteModel.toString();
 	}

@@ -13,6 +13,7 @@ import parser.ast.Expression;
 import parser.ast.ExpressionBinaryOp;
 import parser.ast.ExpressionFormula;
 import parser.ast.ExpressionLabel;
+import parser.ast.ExpressionLiteral;
 import parser.ast.ExpressionProb;
 import parser.ast.ExpressionQuant;
 import parser.ast.ExpressionReward;
@@ -20,6 +21,7 @@ import parser.ast.ExpressionTemporal;
 import parser.ast.ExpressionUnaryOp;
 import parser.ast.ExpressionVar;
 import parser.ast.ModulesFile;
+import parser.type.TypeBool;
 import parser.visitor.ASTTraverse;
 import prism.PrismLangException;
 
@@ -229,6 +231,12 @@ public class PropertiesVisitor extends ASTTraverse{
 //				modulesFile.getl
 				BitSet bitS = mdpModel.getLabelStates(label);
 				System.out.println(String.join(bitS.toString(), "-"));
+			}
+			else if (e2 instanceof ExpressionLiteral) {
+				if (((ExpressionLiteral)e2).getType()== TypeBool.getInstance())
+					s += " "+ e.getOperatorSymbol() +" "+ e2;
+				else
+					s += " "+ e.getOperatorSymbol() +" "+ evaluate(e2);
 			}
 			else if (e2 != null)
 				throw new PrismLangException("Unsupported expression: " + e);
